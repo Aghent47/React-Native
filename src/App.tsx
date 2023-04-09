@@ -2,7 +2,9 @@
 // import { ObjetosLiterales } from "./typescript/ObjetosLiterales";
 // import { Funciones } from "./typescript/Funciones";
 
-import { Counter } from "./components/Counter";
+import { CounterConHook } from "./components/CounterConHook";
+
+// import { Counter } from "./components/Counter";
 
 const App = () => {
   return (
@@ -12,7 +14,8 @@ const App = () => {
       {/* <TiposBasicos /> */}
       {/* <ObjetosLiterales /> */}
       {/* <Funciones/> */}
-      <Counter/>
+      {/* <Counter/> */}
+      <CounterConHook/>
     </div>
   )
 }
