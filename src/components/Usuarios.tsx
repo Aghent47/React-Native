@@ -1,27 +1,40 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { reqResApi } from "../api/reqRes"
 import { ReqresListado, Usuario } from "../interfaces/reqRes"
 
 export const Usuarios = () => {
 
     const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+    const paginaRef = useRef(1);// 1 es el valor inicial del useRef
 
     useEffect(() => {
-        //llamado al API
-        reqResApi.get<ReqresListado>('/users').then(resp => {
-            console.log(resp.data.data);
-            setUsuarios(resp.data.data);
-        })
-            .catch(console.log)
+       cargarUsuarios();
     }, [])
+
+    const cargarUsuarios = async() => {
+         //llamado al API
+         const resp = await reqResApi.get<ReqresListado>('/users', {
+                params: {
+                    page: paginaRef.current
+                }
+         })
+            if(resp.data.data.length > 0){
+                setUsuarios(resp.data.data);
+                paginaRef.current ++;
+                
+            }else{
+                alert('No hay mas registros');
+            }
+       
+    }
 
     const renderUsuarios = ({ id, first_name, last_name, email,avatar }: Usuario) => {
         return (
             <tr key={ id.toString()} >
                 <td>
                     <img src={avatar}
-                    alt={first_name} 
-                    style={{
+                    alt= {first_name} 
+                    style ={{
                         width: 35,
                         borderRadius: 100
                     }} />
@@ -52,6 +65,7 @@ export const Usuarios = () => {
             </table>
             <button
                 className="btn btn-primary"
+                onClick={cargarUsuarios}
             >
                 Siguiente
             </button>
