@@ -14,9 +14,17 @@ const inicialState: AuthState = {
   nombre: ''
 }
 
-type AuthAction = { type: 'logout' };
+type LoginPayload = {
+  username: string;
+  nombre: string;
+}
 
-const AuthReducer = ( state:AuthState, action: AuthAction ): AuthState => { 
+type AuthAction = 
+  | { type: 'logout' }
+  | { type: 'login', payload: LoginPayload};
+
+
+const AuthReducer = (state: AuthState, action: AuthAction): AuthState => {
   switch (action.type) {
     case 'logout':
       return {
@@ -25,6 +33,14 @@ const AuthReducer = ( state:AuthState, action: AuthAction ): AuthState => {
         username: '',
         nombre: ''
       }
+    case 'login':
+      const { nombre, username } = action.payload;
+      return { 
+        nombre,
+        username,
+        validando: false,
+        token: 'ABC123'
+      }
     default:
       return state;
   }
@@ -32,43 +48,60 @@ const AuthReducer = ( state:AuthState, action: AuthAction ): AuthState => {
 
 export const Login = () => {
 
-    const [{validando}, dispatch] = useReducer(AuthReducer, inicialState);
+  const [{ validando, token, nombre }, dispatch] = useReducer(AuthReducer, inicialState);
 
-    useEffect(() => {
-      setTimeout(() => {
-        dispatch({ type: 'logout' });
-      }, 1500);
-    }, [])
-    
-    if (validando){
-      return (
-        <>
-          <div className="alert alert-info">
-            Validando...
-          </div>
-        </>
-      )
-    }
+  useEffect(() => {
+    setTimeout(() => {
+      dispatch({ type: 'logout' });
+    }, 1500);
+  }, [])
+
+  const login = () => {
+    dispatch({
+      type: 'login',
+      payload: {
+        nombre: 'Neider Hernández',
+        username: 'NeiderHm'
+      }
+    })
+  }
+
+  const logout = () => {
+    dispatch({ type: 'logout' });
+  }
+
+  if (validando) {
+    return (
+      <>
+        <div className="alert alert-info">
+          Validando...
+        </div>
+      </>
+    )
+  }
 
 
   return (
     <>
       <h3>Login</h3>
-      <div className="alert alert-danger">
-        No autenticado
-      </div>
-      <div className="alert alert-success ">
-        Autenticado
-      </div>
-      <button
-        className="btn btn-primary"
-      >
-        Login
-      </button>
-      &nbsp;
-      <button className="btn btn-danger">
-        Logout
-      </button>
+      {
+        (token)
+          ? <div className="alert alert-success "> Autenticado como: {nombre} </div>
+          : <div className="alert alert-danger"> No autenticado </div>
+      }
+
+      {
+        (token)
+          ? 
+          (<button className="btn btn-danger" onClick={logout} >
+            Logout
+          </button>)
+          :
+          (<button className="btn btn-primary" onClick={login} >
+            Login
+          </button>)
+      }
+
 
     </>
   )
