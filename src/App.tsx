@@ -4,7 +4,11 @@
 // import { CounterConHook } from "./components/CounterConHook";
 // import { Counter } from "./components/Counter";
 // import { Login } from "./components/Login";
-import { Usuarios } from "./components/Usuarios";
+// import { Usuarios } from "./components/Usuarios";
+
+import { Formulario } from "./components/Formulario";
+
+
 
 const App = () => {
   return (
@@ -17,7 +21,8 @@ const App = () => {
       {/* <Counter/> */}
       {/* <CounterConHook/> */}
       {/* <Login/> */}
-      <Usuarios/>
+      {/* <Usuarios/> */}
+      <Formulario/>
     </div>
   )
 }
